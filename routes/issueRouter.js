@@ -5,7 +5,7 @@ const Issue = require('../models/issueSchema.js')
 // GET ALL
 issueRouter.get("/", (req, res, next) => {
     // Addition
-    Issue.Find((err, issues) => {
+    Issue.find((err, issues) => {
         if (err) {
             res.status(500)
             return next(err)
@@ -44,6 +44,29 @@ issueRouter.put("/:_id", (req, res, next) => {
             return res.status(201).send(updatedIssue)
         }
     )
+})
+
+// put request for adding comments to my comment array
+issueRouter.put("/:issueId", (req, res, next) => {
+    Issue.findOne({_id: req.params._id}, (err, foundIssue) => {
+        if(err){
+            res.status(500)
+            return next (err)
+        }
+        newArr = [...foundIssue.comments, req.body]
+        Issue.findOneAndUpdate(
+            {_id: req.params._id},
+            {comments: [...newArr]},
+            {new: true},
+            (err, updatedIssue) => {
+                if(err){
+                    res.status(500)
+                    return next (err)
+                }
+                return res.status(201).send(updatedIssue)
+            }
+        )
+    })
 })
 
 // would I use issueId or _id?
