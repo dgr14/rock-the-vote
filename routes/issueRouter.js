@@ -32,9 +32,9 @@ issueRouter.post("/", (req, res, next) => {
 issueRouter.put("/:_id", (req, res, next) => {
     const newObject = req.body
     Issue.findOneAndUpdate(
-        {_id: req.params._id},
-        //adding to array thats inside data
-        newObject,
+        {_id: req.params._id},                  // 1. the _id of the item to update
+        //adding to array thats inside data     
+        newObject,                              // 2. The update, if you use just req.body, it will update the object
         {new: true}, (err, updatedIssue) => {
             if (err) {
                 res.status(500)
@@ -67,6 +67,23 @@ issueRouter.put("/:issueId", (req, res, next) => {
             }
         )
     })
+})
+
+// Add like - Put request - INCREMENTING
+// How do I connect this to a front end incrementer?
+issueRouter.put("/issue/:_id", (req, res, next) => {
+    Issue.findOneAndUpdate(
+        {_id: req.params._id},
+        {$inc: {voteCounter: 1}}, // how do I make sure people can downvote as well? Should I pass a second argument that adds the user who just voted?
+        {new: true},
+        (err, updatedIssue) => {
+            if(err){
+                res.status(500)
+                return next(err)
+            }
+            return res.status(201).send(updatedIssue)
+        }
+    )
 })
 
 // would I use issueId or _id?
