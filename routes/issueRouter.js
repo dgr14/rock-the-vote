@@ -2,6 +2,21 @@ const express = require("express")
 const issueRouter = express.Router()
 const Issue = require('../models/issueSchema.js')
 
+issueRouter.get('/:issueId', (req, res, next) => {
+    console.log(req.params)
+    Issue.findOne({_id: req.params.issueId}, (err, issue) => {
+        if(err) {
+            res.status(500)
+            return next (err)
+        }
+        if (!issue) {
+            res.status(404)
+            return next (new Issue("No Topic found"))
+        }
+        return res.send(issue)
+    })
+})
+
 // GET ALL
 issueRouter.get("/", (req, res, next) => {
     // Addition
@@ -10,7 +25,7 @@ issueRouter.get("/", (req, res, next) => {
             res.status(500)
             return next(err)
         }
-        return res.send(issues)
+        return res.status(200).send(issues)
     })
 })
 
