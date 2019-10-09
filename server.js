@@ -22,7 +22,7 @@ mongoose.connect("mongodb://localhost:27017/issues",
     )
 )
 
-app.use(("/issues"), require('./routes/issueRouter'))
+app.use("/issues", require('./routes/issueRouter'))
 
 // Global Server Error Handler - handles ANY thrown error from ANY of our routes above
 app.use((err, req, res, next) => {
